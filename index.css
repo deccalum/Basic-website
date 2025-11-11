@@ -1,0 +1,222 @@
+/* Global sizing: include padding/border in width calculations */
+* { box-sizing: border-box; }
+
+body {
+    background-color: #EED6D3; 
+    position: relative;
+    margin: 0; /* prevent horizontal scrollbars */
+}
+  
+  body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; 
+  background-color: #94EAEB;
+  border-bottom: 4px solid black;
+  box-shadow: 0px 2px 16px black;
+  opacity: 0.5;
+  pointer-events: none; 
+  z-index: -1; 
+  }
+
+html {
+    scroll-behavior: smooth;
+    font-family: JetBrains Mono, monospace;
+}
+
+/* Site content wrapper to center content and cap line length */
+.site {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-inline: 16px;
+}
+
+main {
+    padding: 2em;
+}
+
+h1  {
+    font-family: JetBrains Mono, monospace;
+    /* Clamp heading: min 32px, preferred 10vw, max 120px */
+    font-size: clamp(32px, 10vw, 120px);
+    line-height: 1.05;
+    margin: 0.2em 0 0.4em;
+}
+  
+h2, h3, h4 {
+      font-family: JetBrains Mono, monospace;
+}
+
+nav {
+    background: transparent;
+    font-family: Monaco, monospace;
+    /* Clamp nav font size to avoid overflow on small screens */
+    font-size: clamp(14px, 2.5vw, 24px);
+    display: block;
+    margin-top: 20px; /* offset for fixed top band */
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0; /* vertical breathing room */
+    display: flex;
+    flex-wrap: wrap; /* allow wrapping instead of cutting off */
+    gap: 8px 16px;  /* row/column gaps */
+    justify-content: center; /* center items within viewport */
+}
+
+nav > ul > li {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+}
+
+nav a {
+    color: slategray;
+    text-decoration: none;
+    padding: 0.5em 0.8em;
+    display: block;
+}
+
+nav a:hover {
+    color: plum;
+    background-color: aquamarine;
+}
+
+nav a:link {
+  color: slategray;
+  text-decoration: none;
+}
+
+nav > ul > li:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #EEDCF6;
+  min-width: 200px;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.dropdown-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
+.dropdown-content li {
+    padding: 0.5em 1em;
+    color: slategray;
+    font-size: smaller;
+}
+
+.dropdown-content li:hover {
+    background-color: aquamarine;
+    color: plum;
+    font-size: smaller;
+}
+
+.layout {
+    display: flex;
+    gap: 1em;
+    align-items: flex-start
+}
+
+.sidemenu {
+    width: 20vw;
+    min-width: 200px;
+    background-color: #D9EDF3;
+    padding: 0.01em;
+}
+
+.sidemenu details {
+    margin: 1em;
+    overflow: hidden;
+}
+
+.sidemenu summary {
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.25em;
+    background: #E2C6D7;
+    list-style: none;
+}
+
+.sidemenu summary::after {
+    content: "";
+    transition: transform 1.5s ease;
+    width: 0;
+    height: 0;  
+    opacity: .6;
+}
+
+.sidemenu details[open] summary::after {
+    transform: rotate(90deg);
+    opacity: .9;
+}
+
+.sidemenu ul {
+    list-style: none;
+    background-color: #D4A5A2;
+    border: black 1px solid;
+    margin: 0;
+}
+
+.sidemenu li a {
+    padding-right: 1em;
+    text-decoration: underline;
+    color:black;
+}
+
+.sidemenu li a:hover {
+    background-color: aquamarine;
+    color: plum;
+    font-weight: bold;
+}
+.main {
+    flex-grow: 1;
+    max-width: 90%; /* limit line length for readability */
+}
+
+/* Page-specific: Microcontrollers page - only the .main content scrolls */
+body.page--microcontrollers {
+    overflow: hidden; /* lock window scroll */
+}
+body.page--microcontrollers .layout {
+    height: calc(100vh + 110px); /* adjust for top band/nav height */
+    overflow: hidden; /* contain internal scroll areas */
+}
+body.page--microcontrollers .sidemenu {
+    overflow: hidden; /* keep sidebar static (no scroll) */
+}
+body.page--microcontrollers .main {
+    overflow-y: auto; /* only main scrolls vertically */
+    max-height: calc(100vh - 100px); /* keep within viewport */
+    padding-right: 1rem; /* space for scrollbar */
+    scrollbar-gutter: stable; /* avoid layout shift */
+}
+/* Optional: hide horizontal overflow just in case */
+body.page--microcontrollers .main::-webkit-scrollbar:horizontal {
+    display: none;
+}
+
+/* Small screens: stack sidebar above main, reduce gaps */
+@media (max-width: 768px) {
+    .layout { flex-direction: column; gap: 0.75em; }
+    .sidemenu { width: 100%; min-width: 0; }
+    nav ul { justify-content: flex-start; }
+}
+
+.main section:target {
+    display: block;
+}
